@@ -33,7 +33,9 @@ Dlib requires CMake for its installation. Follow these steps to download and ins
 
 #### On macOS:
 
-1. Open the Terminal.
+1. Clone the Repo.
+   ```bash
+   git clone https://github.com/akashchoudhary436/Face-Detection.git
 
 2. open folder
    ```bash
