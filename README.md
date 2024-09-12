@@ -35,9 +35,9 @@ Dlib requires CMake for its installation. Follow these steps to download and ins
 
 1. Open the Terminal.
 
-2. cd 
+2. open folder
    ```bash
-  cd FACE-DETECTION
+   cd FACE-DETECTION
 
 3. Install requirements.txt:
 
@@ -48,6 +48,3 @@ Dlib requires CMake for its installation. Follow these steps to download and ins
 
    ```bash
    python face_detection_app.py
-
-
-
