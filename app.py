@@ -1,167 +1,122 @@
+import numpy as np
 import cv2
 import dlib
-import numpy as np
-import os
-import pandas as pd
-from werkzeug.utils import secure_filename
-from flask import Flask, request, render_template
+import imutils
+import math
+from imutils import face_utils
+from scipy.ndimage import uniform_filter1d
 
-# Load OpenCV's pre-trained Haar Cascade classifier for face detection
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+# Paths for dlib's shape predictor
+predictor_path = "shape_predictor_68_face_landmarks.dat"
 
-# Load Dlib's pre-trained facial landmark predictor
-predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+# Threshold values for different face shapes
+thresholds = {
+    "heart": (53.4850795291, 26.0),
+    "round": (51.9181404322, 28.0),
+    "square": (33.6356433044, 42.0),
+    "long": (27.349185998, 56.00)
+}
 
-# Define directory for saving data
-data_dir = 'face_data2'
-images_dir = os.path.join(data_dir, 'images')  # Folder for saving uploaded images
-csv_file_path = os.path.join(data_dir, 'face_data2.csv')
+# Initialize dlib's face detector and create the facial landmark predictor
+detector = dlib.get_frontal_face_detector()
+predictor = dlib.shape_predictor(predictor_path)
 
-# Ensure the images directory exists
-if not os.path.exists(images_dir):
-    os.makedirs(images_dir)
+# Start video capture from the webcam
+cap = cv2.VideoCapture(0)
 
-# If CSV doesn't exist, create it with appropriate headers
-if not os.path.exists(csv_file_path):
-    # Create a header with landmarks and feature columns
-    landmark_columns = [f"landmark_{i}_{j}" for i in range(68) for j in ['x', 'y']]
-    feature_columns = [f"feature_{i}" for i in range(2278)]  # 68 choose 2 is 2278 distances
-    df = pd.DataFrame(columns=['Image Name', 'Image Path'] + landmark_columns + feature_columns)
-    df.to_csv(csv_file_path, index=False)
+# List to store previous face shape classifications for smoothing
+shape_history = []
 
-# Function to extract facial landmarks and return the points
-def get_facial_landmarks(image, rect):
-    landmarks = predictor(image, rect)
-    points = [(landmarks.part(n).x, landmarks.part(n).y) for n in range(68)]
-    return points
+def smooth(value_list, window_size=5):
+    if len(value_list) < window_size:
+        return value_list
+    return uniform_filter1d(value_list, size=window_size)
 
-# Function to calculate the distance between two points (Euclidean distance)
-def euclidean_distance(point1, point2):
-    return np.sqrt((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2)
-
-# Function to extract features from landmarks (all pairwise distances)
-def extract_features(landmarks):
-    features = []
-    for i in range(len(landmarks)):
-        for j in range(i + 1, len(landmarks)):
-            features.append(euclidean_distance(landmarks[i], landmarks[j]))
-    # Ensure features length is 2278
-    features = features[:2278]  # Truncate to 2278
-    features.extend([0] * (2278 - len(features)))  # Fill with zero if less than 2278
-    return features
-
-# Function to save face details (landmarks, features, and image path) to a CSV file
-def save_face_details(image_name, image_path, landmarks, features):
-    # Flatten landmarks (68 points) into a 136-value array
-    landmarks_flat = [coord for point in landmarks for coord in point]
+while True:
+    # Capture frame-by-frame
+    ret, frame = cap.read()
+    if not ret:
+        break
     
-    # Create a dictionary with the image name, image path, landmarks, and features
-    data = {
-        'Image Name': image_name,
-        'Image Path': image_path,
-    }
+    frame = imutils.resize(frame, width=500)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    # Detect faces in the frame
+    rects = detector(gray, 1)
     
-    # Add flattened landmarks and features to the data dictionary
-    data.update({f"landmark_{i}_{j}": landmarks_flat[idx] for idx, (i, j) in enumerate([(n, coord) for n in range(68) for coord in ['x', 'y']])})
-    data.update({f"feature_{i}": features[i] for i in range(len(features))})
+    for rect in rects:
+        shape = predictor(gray, rect)
+        shape = face_utils.shape_to_np(shape)
+        
+        # Draw facial landmarks
+        for (x, y) in shape:
+            cv2.circle(frame, (x, y), 1, (0, 255, 255), -1)
+        
+        # Extract specific landmarks
+        try:
+            x1, y1 = shape[0]      # Left eyebrow outer corner
+            x3, y3 = shape[2]      # Left eyebrow inner corner
+            x5, y5 = shape[4]      # Nose bridge
+            x7, y7 = shape[6]      # Nose tip
+            x9, y9 = shape[8]      # Right nostril
+            x17, y17 = shape[16]   # Jawline
+            x28, y28 = shape[27]   # Right cheekbone
+        except IndexError:
+            continue
+        
+        # Compute slopes
+        slope1 = (y3 - y1) / (x3 - x1) if (x3 - x1) != 0 else float('inf')
+        slope2 = (y5 - y3) / (x5 - x3) if (x5 - x3) != 0 else float('inf')
+        slope3 = (y7 - y5) / (x7 - x5) if (x7 - x5) != 0 else float('inf')
+        slope4 = (y9 - y7) / (x9 - x7) if (x9 - x7) != 0 else float('inf')
 
-    # Convert the dictionary to a DataFrame and append to CSV
-    df = pd.DataFrame([data])
-    df.to_csv(csv_file_path, mode='a', index=False, header=False)
+        # Compute distances and threshold
+        distx = math.sqrt((x1 - x17)**2 + (y1 - y17)**2)
+        disty = math.sqrt((x9 - x28)**2 + (y9 - y28)**2)
+        thresh = distx - disty
 
-# Function to draw landmarks on the image
-def draw_landmarks(image, landmarks):
-    # Draw each landmark with a green dot
-    for i, point in enumerate(landmarks):
-        color = (0, 255, 0) if i < 27 else (0, 0, 255)  # Use green for first 27, red for the rest
-        cv2.circle(image, point, 2, color, -1)  # Draw green or red dot for each landmark
+        # Determine face shape
+        face_shape = "Unknown"
+        if thresh <= thresholds["long"][1]:
+            if slope1 >= 7.395:
+                if slope3 >= 1.15:
+                    face_shape = "long face"
+                else:
+                    face_shape = "square face"
+            else:
+                if slope3 >= 1.15:
+                    face_shape = "square face"
+                else:
+                    face_shape = "long face"
+        else:
+            if slope1 >= 11.75:
+                if slope3 <= 1.1:
+                    face_shape = "heart face"
+                else:
+                    face_shape = "round face"
+            else:
+                if slope3 >= 1.1:
+                    face_shape = "round face"
+                else:
+                    face_shape = "heart face"
+        
+        # Add face shape to history for smoothing
+        shape_history.append(face_shape)
+        shape_history = shape_history[-10:]  # Keep the last 10 shapes
+        
+        # Smooth the face shape detection
+        most_common_shape = max(set(shape_history), key=shape_history.count)
+        
+        # Display the face shape on the image
+        cv2.putText(frame, most_common_shape, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-    # Draw additional intermediate points for denser marking
-    for i in range(len(landmarks) - 1):
-        p1 = landmarks[i]
-        p2 = landmarks[i + 1]
-        num_intermediate_points = 5
-        for t in np.linspace(0, 1, num_intermediate_points):
-            x = int(p1[0] * (1 - t) + p2[0] * t)
-            y = int(p1[1] * (1 - t) + p2[1] * t)
-            cv2.circle(image, (x, y), 1, (255, 255, 255), -1)  # Draw white dots for intermediate points
+    # Show the result
+    cv2.imshow("Real-Time Face Shape Detection", frame)
     
-    return image
+    # Break loop on 'q' key press
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
-# Function to process the uploaded image
-def process_uploaded_image(image_path):
-    # Load the image from the path
-    image = cv2.imread(image_path)
-    
-    # Convert the image to grayscale for face detection
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # Detect faces using OpenCV Haar Cascade
-    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-
-    if len(faces) == 0:
-        print(f"No face detected in the image {image_path}.")
-        return
-
-    # For each detected face, detect landmarks using Dlib
-    for (x, y, w, h) in faces:
-        dlib_rect = dlib.rectangle(x, y, x + w, y + h)
-        
-        # Get the facial landmarks
-        landmarks = get_facial_landmarks(gray, dlib_rect)
-        
-        # Extract features (distances between landmarks)
-        features = extract_features(landmarks)
-        
-        # Get the image name from the path
-        image_name = os.path.basename(image_path)
-        
-        # Draw landmarks on the image
-        image_with_landmarks = draw_landmarks(image, landmarks)
-        
-        # Save the modified image with landmarks
-        modified_image_path = os.path.join(images_dir, f"landmarks_{image_name}")
-        cv2.imwrite(modified_image_path, image_with_landmarks)
-        
-        # Save the face details (landmarks, features, and image path) to the CSV file
-        save_face_details(image_name, image_path, landmarks, features)
-        
-        print(f"Processed and saved details for {image_name} with landmarks and features.")
-
-# Function to handle the upload and processing of the images
-def upload_and_process_images(files):
-    for file in files:
-        # Save the uploaded image to the images directory
-        image_filename = secure_filename(file.filename)
-        image_path = os.path.join(images_dir, image_filename)
-        file.save(image_path)
-
-        # Process the uploaded image to detect landmarks
-        process_uploaded_image(image_path)
-
-# Flask application
-app = Flask(__name__)
-
-# Route to display the upload form and process uploaded files
-@app.route('/', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        # Check if files are part of the request
-        if 'files[]' not in request.files:
-            return "No file part"
-        
-        files = request.files.getlist('files[]')
-        
-        # Check if files are selected
-        if not files:
-            return "No selected files"
-        
-        # If files are valid, process them
-        if files:
-            upload_and_process_images(files)  # Call the function to save and process images
-            return "Files successfully uploaded and processed"
-    
-    return render_template('upload.html')
-
-if __name__ == "__main__":
-    app.run(debug=True)
+# Release the capture and close all windows
+cap.release()
+cv2.destroyAllWindows()

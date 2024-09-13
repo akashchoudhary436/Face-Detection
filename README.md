@@ -19,7 +19,9 @@ Before running the project, ensure you have the following installed:
 - OpenCV
 - Dlib
 - Numpy
-- HDF5 support (via h5py)
+- imutils==0.5.4
+- scipy==1.11.2
+
 
 ### Installing CMake
 
@@ -49,15 +51,4 @@ Dlib requires CMake for its installation. Follow these steps to download and ins
 4. Run the Script:
 
    ```bash
-   python face_detection_app.py
-
-#### Train the ML model
-
-1. run this command in root directory:
-
-   ```bash
    python app.py
-
-2. Open the http://localhost/5000 link appear in the terminal
-
-   Choose the single or multiple images and upload it then open the face_data folder in the root directory there all the data will be saved the images in image folder and Face Numerical Data in csv file 
