@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project captures facial landmarks from real-time video, extracts features based on these landmarks, and saves both the landmarks and features to an HDF5 file for later use. The program uses OpenCV for face detection, Dlib for facial landmark detection, and HDF5 for storing data.
+This project captures facial landmarks from real-time video, extracts features based on these landmarks, and saves both the landmarks and features to an HDF5 file for later use. The program uses OpenCV for face detection, Dlib for facial landmark detection, and CSV for storing data.
 
 ## Features
 
@@ -50,3 +50,14 @@ Dlib requires CMake for its installation. Follow these steps to download and ins
 
    ```bash
    python face_detection_app.py
+
+#### Train the ML model
+
+1. run this command in root directory:
+
+   ```bash
+   python app.py
+
+2. Open the http://localhost/5000 link appear in the terminal
+
+   Choose the single or multiple images and upload it then open the face_data folder in the root directory there all the data will be saved the images in image folder and Face Numerical Data in csv file 
