@@ -13,9 +13,9 @@ face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_fronta
 predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
 
 # Define directory for saving data
-data_dir = 'face_data'
+data_dir = 'face_data2'
 images_dir = os.path.join(data_dir, 'images')  # Folder for saving uploaded images
-csv_file_path = os.path.join(data_dir, 'face_data.csv')
+csv_file_path = os.path.join(data_dir, 'face_data2.csv')
 
 # Ensure the images directory exists
 if not os.path.exists(images_dir):
@@ -23,30 +23,47 @@ if not os.path.exists(images_dir):
 
 # If CSV doesn't exist, create it with appropriate headers
 if not os.path.exists(csv_file_path):
-    df = pd.DataFrame(columns=['Image Name', 'Image Path', 'Landmarks'])
+    # Create a header with landmarks and feature columns
+    landmark_columns = [f"landmark_{i}_{j}" for i in range(68) for j in ['x', 'y']]
+    feature_columns = [f"feature_{i}" for i in range(2278)]  # 68 choose 2 is 2278 distances
+    df = pd.DataFrame(columns=['Image Name', 'Image Path'] + landmark_columns + feature_columns)
     df.to_csv(csv_file_path, index=False)
 
 # Function to extract facial landmarks and return the points
 def get_facial_landmarks(image, rect):
     landmarks = predictor(image, rect)
-    points = []
-    for n in range(68):
-        x = landmarks.part(n).x
-        y = landmarks.part(n).y
-        points.append((x, y))
+    points = [(landmarks.part(n).x, landmarks.part(n).y) for n in range(68)]
     return points
 
-# Function to save face details (landmarks and image path) to a CSV file
-def save_face_details(image_name, image_path, landmarks):
+# Function to calculate the distance between two points (Euclidean distance)
+def euclidean_distance(point1, point2):
+    return np.sqrt((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2)
+
+# Function to extract features from landmarks (all pairwise distances)
+def extract_features(landmarks):
+    features = []
+    for i in range(len(landmarks)):
+        for j in range(i + 1, len(landmarks)):
+            features.append(euclidean_distance(landmarks[i], landmarks[j]))
+    # Ensure features length is 2278
+    features = features[:2278]  # Truncate to 2278
+    features.extend([0] * (2278 - len(features)))  # Fill with zero if less than 2278
+    return features
+
+# Function to save face details (landmarks, features, and image path) to a CSV file
+def save_face_details(image_name, image_path, landmarks, features):
     # Flatten landmarks (68 points) into a 136-value array
-    landmarks_flat = np.array(landmarks).flatten().tolist()
+    landmarks_flat = [coord for point in landmarks for coord in point]
     
-    # Create a dictionary with the image name, image path, and landmarks
+    # Create a dictionary with the image name, image path, landmarks, and features
     data = {
         'Image Name': image_name,
         'Image Path': image_path,
-        'Landmarks': landmarks_flat
     }
+    
+    # Add flattened landmarks and features to the data dictionary
+    data.update({f"landmark_{i}_{j}": landmarks_flat[idx] for idx, (i, j) in enumerate([(n, coord) for n in range(68) for coord in ['x', 'y']])})
+    data.update({f"feature_{i}": features[i] for i in range(len(features))})
 
     # Convert the dictionary to a DataFrame and append to CSV
     df = pd.DataFrame([data])
@@ -93,6 +110,9 @@ def process_uploaded_image(image_path):
         # Get the facial landmarks
         landmarks = get_facial_landmarks(gray, dlib_rect)
         
+        # Extract features (distances between landmarks)
+        features = extract_features(landmarks)
+        
         # Get the image name from the path
         image_name = os.path.basename(image_path)
         
@@ -103,10 +123,10 @@ def process_uploaded_image(image_path):
         modified_image_path = os.path.join(images_dir, f"landmarks_{image_name}")
         cv2.imwrite(modified_image_path, image_with_landmarks)
         
-        # Save the face details (landmarks and image path) to the CSV file
-        save_face_details(image_name, image_path, landmarks)
+        # Save the face details (landmarks, features, and image path) to the CSV file
+        save_face_details(image_name, image_path, landmarks, features)
         
-        print(f"Processed and saved details for {image_name} with landmarks.")
+        print(f"Processed and saved details for {image_name} with landmarks and features.")
 
 # Function to handle the upload and processing of the images
 def upload_and_process_images(files):
