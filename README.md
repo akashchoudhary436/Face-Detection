@@ -1,4 +1,4 @@
-# Real-Time Face Landmark Detection and Data Capture
+# Real-Time Face Landmark Detection and Data Capture for ML
 
 ## Overview
 
@@ -31,7 +31,7 @@ Dlib requires CMake for its installation. Follow these steps to download and ins
 2. Download the Windows Installer (.msi) for the latest version of CMake.
 3. Run the installer and follow the installation instructions. Make sure to select the option to add CMake to the system PATH during installation.
 
-#### On macOS:
+#### On :
 
 1. Clone the Repo.
    ```bash
@@ -50,3 +50,21 @@ Dlib requires CMake for its installation. Follow these steps to download and ins
 
    ```bash
    python face_detection_app.py
+
+
+For training the Model 
+
+1. Run the Script:
+
+   ```bash
+   python app.py
+
+2. Open the site:
+
+   In the terminal the there will be http://localhost/5000 open this link
+
+3. Choose the single or multiple image  to train the model and save data:
+
+choose the multiple img and upload and at face_data folder you will see the processed data 
+
+
