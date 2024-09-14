@@ -1,13 +1,12 @@
-# Real-Time Face Landmark Detection and Data Capture
+# Real-Time Face Landmark Detection and Face Shape
 
 ## Overview
 
-This project captures facial landmarks from real-time video, extracts features based on these landmarks, and saves both the landmarks and features to an HDF5 file for later use. The program uses OpenCV for face detection, Dlib for facial landmark detection, and CSV for storing data.
+This project captures facial landmarks from real-time video, extracts features based on these landmarks. The program uses OpenCV for face detection, Dlib for facial landmark detection.
 
 ## Features
 
 - Real-time face detection and landmark extraction
-- Saving of facial landmarks and feature vectors to an HDF5 file
 - Visualization of facial landmarks and intermediate points in the video feed
 
 ## Prerequisites
