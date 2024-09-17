@@ -120,8 +120,18 @@ Once you have the trained model file (FaceShapeModel_XGBoost.pkl), you can use i
 
 ## Screenshots
 
-'1.png'
 
-'2.png' '3.png'
+### Landing Page
+![Landing Page](1.png)
 
-'4.png' '5.png'
+### Upload Page
+![Upload Image](2.png)
+
+### Oval Shape Image
+![Oval Shape](3.png)
+
+### Round Shape Image
+![Round](4.png)
+
+### Heart Shape Image
+![Heart](5.png)
