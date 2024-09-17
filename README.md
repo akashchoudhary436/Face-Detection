@@ -120,8 +120,8 @@ Once you have the trained model file (FaceShapeModel_XGBoost.pkl), you can use i
 
 ## Screenshots
 
-media/1.png
+'1.png'
 
-media/2.png media/3.png
+'2.png' '3.png'
 
-media/4.png media/5.png
+'4.png' '5.png'
