@@ -122,7 +122,7 @@ Once you have the trained model file (FaceShapeModel_XGBoost.pkl), you can use i
 
 
 ### Landing Page
-![Landing Page](1.png)
+<img src="5.png" alt="Landing Page" width="600" height="400">
 
 ### Upload Page
 ![Upload Image](2.png)
