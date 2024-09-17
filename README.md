@@ -76,7 +76,8 @@ Here's a step-by-step guide to training the dataset and creating a face shape cl
 ## 1. Prepare Your Data
 
 Ensure your dataset is organized in a directory structure where each subdirectory corresponds to a face shape category. For example:
- '''
+ 
+ ```bash
 Face_Shape/
     heart/
         image1.jpg
@@ -94,7 +95,7 @@ Face_Shape/
         image1.jpg
         image2.jpg
         ...
- '''
+ ```
 
 ## 2. Run the Data Processing and Model Training Script
 
