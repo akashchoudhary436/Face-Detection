@@ -26,7 +26,7 @@ The following important libraries are used in this project:
 1. **Clone the Repository**
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/akashchoudhary436/Face-Detection.git
 
 2. **Create a Virtual Environment**
 
@@ -122,16 +122,16 @@ Once you have the trained model file (FaceShapeModel_XGBoost.pkl), you can use i
 
 
 ### Landing Page
-<img src="1.png" alt="Landing Page" width="900" height="500">
+<img src="assets/1.png" alt="Landing Page" width="900" height="500">
 
 ### Upload Page
-<img src="2.png" alt="Upload Page" width="600" height="500">
+<img src="assets/2.png" alt="Upload Page" width="600" height="500">
 
 ### Oval Shape Image
-<img src="3.png" alt="Oval Shape Image" width="500" height="400">
+<img src="assets/3.png" alt="Oval Shape Image" width="500" height="400">
 
 ### Round Shape Image
-<img src="4.png" alt="Round Shape Image" width="500" height="400">
+<img src="assets/4.png" alt="Round Shape Image" width="500" height="400">
 
 ### Heart Shape Image
-<img src="5.png" alt="Heart Shape Image" width="500" height="400">
+<img src="assets/5.png" alt="Heart Shape Image" width="500" height="400">
