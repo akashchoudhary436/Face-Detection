@@ -122,16 +122,16 @@ Once you have the trained model file (FaceShapeModel_XGBoost.pkl), you can use i
 
 
 ### Landing Page
-<img src="5.png" alt="Landing Page" width="600" height="400">
+<img src="1.png" alt="Landing Page" width="900" height="500">
 
 ### Upload Page
-![Upload Image](2.png)
+<img src="2.png" alt="Landing Page" width="600" height="500">
 
 ### Oval Shape Image
-![Oval Shape](3.png)
+<img src="3.png" alt="Landing Page" width="500" height="400">
 
 ### Round Shape Image
-![Round](4.png)
+<img src="4.png" alt="Landing Page" width="500" height="400">
 
 ### Heart Shape Image
-![Heart](5.png)
+<img src="4.png" alt="Landing Page" width="500" height="400">
