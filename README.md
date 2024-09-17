@@ -1,56 +1,127 @@
-# (Advance Version with more Accurace Upcoming)
-
-
-## Real-Time Face Landmark Detection and Face Shape 
+# Real-Time Face Detection and Face Shape.
 
 ## Overview
 
-This project captures facial landmarks from real-time video, extracts features based on these landmarks. The program uses OpenCV for face detection, Dlib for facial landmark detection.
+This project involves a Flask-based web application for real-time face detection and face shape. It leverages MediaPipe for facial landmark detection and XGBoost for face shape classification. Users can upload images to get annotated results or view real-time face detection through their webcam.
 
 ## Features
 
-- Real-time face detection and landmark extraction
-- Visualization of facial landmarks and intermediate points in the video feed
+- **Real-Time Face Detection**: Detect and annotate faces in real-time using your webcam.
+- **Image Upload and Annotation**: Upload an image to get it processed and annotated with detected facial features.
+- **Face Shape Classification**: Classify face shapes based on detected landmarks using a pre-trained model.
 
-## Prerequisites
+## Requirements
 
-Before running the project, ensure you have the following installed:
+The following important libraries are used in this project:
 
-- Python 3.x
-- CMake
-- OpenCV
-- Dlib
-- Numpy
-- imutils==0.5.4
-- scipy==1.11.2
+- `Flask==3.0.3`
+- `mediapipe==0.10.14`
+- `opencv-contrib-python==4.10.0.84`
+- `opencv-python==4.10.0.84`
+- `scikit-learn==1.5.2`
+- `xgboost==2.1.1`
 
+## Installation
 
-### Installing CMake
+1. **Clone the Repository**
 
-Dlib requires CMake for its installation. Follow these steps to download and install CMake:
-
-#### On Windows:
-
-1. Go to the [CMake download page](https://cmake.org/download/).
-2. Download the Windows Installer (.msi) for the latest version of CMake.
-3. Run the installer and follow the installation instructions. Make sure to select the option to add CMake to the system PATH during installation.
-
-#### On :
-
-1. Clone the Repo.
    ```bash
-   git clone https://github.com/akashchoudhary436/Face-Detection.git
+   git clone <repository-url>
 
-2. open folder
+2. **Create a Virtual Environment**
+
    ```bash
-   cd FACE-DETECTION
+   python -m venv venv
 
-3. Install requirements.txt:
+3. **Activate the Virtual Environment**
+
+   ```bash
+   venv\Scripts\activate
+
+4. **Install the Dependencies**
 
    ```bash
    pip install -r requirements.txt
 
-4. Run the Script:
+5. **Run the Flask Application**
 
    ```bash
    python app.py
+
+6. **Access the Web Application**
+
+   Open a web browser and go to http://127.0.0.1:5000/ to access the home page.
+
+
+## Data and Model Information
+
+### Face Shape Classification Model
+
+- **Model File:**: FaceShapeModel_XGBoost.pkl
+- **Description:**: This model is trained using XGBoost on a dataset of facial landmarks. It classifies face shapes into categories 
+such as Heart, Oval, Round, and Square.
+- **Training Data**: The model was trained on a dataset of labeled face shapes with corresponding landmark features extracted using MediaPipe.
+
+### Face Landmarker Model
+
+- **Model File:**: face_landmarker_v2_with_blendshapes.task
+- **Description:**: This MediaPipe model detects facial landmarks and provides blendshapes for facial expressions.
+- **Training Data**: Used to detect key facial landmarks required for both face shape classification and real-time annotations.
+
+
+# Steps to Train the Face Shape Classification Model
+
+Here's a step-by-step guide to training the dataset and creating a face shape classification model based on the provided code:
+
+## 1. Prepare Your Data
+
+Ensure your dataset is organized in a directory structure where each subdirectory corresponds to a face shape category. For example:
+
+Face_Shape/
+    heart/
+        image1.jpg
+        image2.jpg
+        ...
+    oval/
+        image1.jpg
+        image2.jpg
+        ...
+    round/
+        image1.jpg
+        image2.jpg
+        ...
+    square/
+        image1.jpg
+        image2.jpg
+        ...
+
+
+## 2. Run the Data Processing and Model Training Script
+
+### Using the Jupyter Notebook
+
+There is already a train_model.ipynb file that contains the code for processing the dataset, extracting features, training the XGBoost model, and saving the trained model. Here’s how you can use it:
+
+1. **Open the File**
+
+   Open the train_model.ipynb file.
+
+2. **Run the Notebook:**
+
+Execute all cells in the notebook. This will perform the following tasks:
+
+- Load Images and Extract Features: The notebook reads images from the specified dataset directory, detects facial landmarks using MediaPipe, and extracts relevant features.
+- Train the Model: The notebook trains an XGBoost model using the training data.
+- Save the Model: Finally, the trained model is saved to a file named FaceShapeModel_XGBoost.pkl.
+
+## 2. Using the Model
+
+Once you have the trained model file (FaceShapeModel_XGBoost.pkl), you can use it in your Flask application to classify face shapes from detected landmarks in real-time or uploaded images.
+
+## Screenshots
+
+media/1.png
+
+media/2.png media/3.png
+
+media/4.png media/5.png
