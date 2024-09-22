@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project involves a Flask-based web application for real-time face detection and face shape. It leverages MediaPipe for facial landmark detection and XGBoost for face shape classification. Users can upload images to get annotated results or view real-time face detection through their webcam.
+This project involves a Flask-based web application for real-time face detection and face shape. It leverages MediaPipe for facial landmark detection and Random Forest for face shape classification. Users can upload images to get annotated results or view real-time face detection through their webcam.
 
 ## Features
 
@@ -96,7 +96,7 @@ Face_Shape/
 
 ### Using the Jupyter Notebook
 
-There is already a train_model.ipynb file that contains the code for processing the dataset, extracting features, training the XGBoost model, and saving the trained model. Here’s how you can use it:
+There is already a Best_Train-Model_RandomForest file that contains the code for processing the dataset, extracting features, training the Random Forest model, and saving the trained model. Here’s how you can use it:
 
 1. **Open the File**
 
@@ -107,8 +107,8 @@ There is already a train_model.ipynb file that contains the code for processing 
 Execute all cells in the notebook. This will perform the following tasks:
 
 - Load Images and Extract Features: The notebook reads images from the specified dataset directory, detects facial landmarks using MediaPipe, and extracts relevant features.
-- Train the Model: The notebook trains an XGBoost model using the training data.
-- Save the Model: Finally, the trained model is saved to a file named FaceShapeModel_XGBoost.pkl.
+- Train the Model: The notebook trains an Random Forest model using the training data.
+- Save the Model: Finally, the trained model is saved to a file named Best_RandomForest.pkl.
 
 ## 2. Using the Model
 
