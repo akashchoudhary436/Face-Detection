@@ -33,27 +33,17 @@ The following important libraries are used in this project:
    ```bash
    cd Face-Shape-Detection
 
-3. **Create a Virtual Environment**
-
-   ```bash
-   python -m venv venv
-
-4. **Activate the Virtual Environment**
-
-   ```bash
-   venv\Scripts\activate
-
-5. **Install the Dependencies**
+3. **Install the Dependencies**
 
    ```bash
    pip install -r requirements.txt
 
-6. **Run the Flask Application**
+4. **Run the Flask Application**
 
    ```bash
    python app.py
 
-7. **Access the Web Application**
+5. **Access the Web Application**
 
    Open a web browser and go to http://127.0.0.1:5000/ to access the home page.
 
