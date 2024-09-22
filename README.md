@@ -28,27 +28,32 @@ The following important libraries are used in this project:
    ```bash
    git clone https://github.com/akashchoudhary436/Face-Detection.git
 
-2. **Create a Virtual Environment**
+2. **Go to the Face-Shape-Detection Directory**
+
+   ```bash
+   cd Face-Shape-Detection
+
+3. **Create a Virtual Environment**
 
    ```bash
    python -m venv venv
 
-3. **Activate the Virtual Environment**
+4. **Activate the Virtual Environment**
 
    ```bash
    venv\Scripts\activate
 
-4. **Install the Dependencies**
+5. **Install the Dependencies**
 
    ```bash
    pip install -r requirements.txt
 
-5. **Run the Flask Application**
+6. **Run the Flask Application**
 
    ```bash
    python app.py
 
-6. **Access the Web Application**
+7. **Access the Web Application**
 
    Open a web browser and go to http://127.0.0.1:5000/ to access the home page.
 
