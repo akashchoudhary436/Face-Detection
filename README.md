@@ -105,7 +105,7 @@ There is already a train_model.ipynb file that contains the code for processing 
 
 1. **Open the File**
 
-   Open the train_model.ipynb file.
+   Open the Best_Train-Model_RandomForest file.
 
 2. **Run the Notebook:**
 
