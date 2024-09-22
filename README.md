@@ -1,5 +1,8 @@
 # Real-Time Face Detection and Face Shape.
 
+## Installation Demo Link
+https://youtu.be/hIFHVuGEes8?feature=shared
+
 ## Overview
 
 This project involves a Flask-based web application for real-time face detection and face shape. It leverages MediaPipe for facial landmark detection and Random Forest for face shape classification. Users can upload images to get annotated results or view real-time face detection through their webcam.
