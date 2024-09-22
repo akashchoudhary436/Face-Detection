@@ -26,7 +26,7 @@ The following important libraries are used in this project:
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/akashchoudhary436/Face-Detection.git
+   git clone https://github.com/akashchoudhary436/Face-Shape-Detection.git
 
 2. **Go to the Face-Shape-Detection Directory**
 
