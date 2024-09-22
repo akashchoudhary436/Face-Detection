@@ -19,7 +19,7 @@ The following important libraries are used in this project:
 - `opencv-contrib-python==4.10.0.84`
 - `opencv-python==4.10.0.84`
 - `scikit-learn==1.5.2`
-- `xgboost==2.1.1`
+- `random forest==2.1.1`
 
 ## Installation
 
@@ -57,8 +57,8 @@ The following important libraries are used in this project:
 
 ### Face Shape Classification Model
 
-- **Model File:**: FaceShapeModel_XGBoost.pkl
-- **Description:**: This model is trained using XGBoost on a dataset of facial landmarks. It classifies face shapes into categories 
+- **Model File:**: Best_RandomForest.pkl
+- **Description:**: This model is trained using Random Forest on a dataset of facial landmarks. It classifies face shapes into categories 
 such as Heart, Oval, Round, and Square.
 - **Training Data**: The model was trained on a dataset of labeled face shapes with corresponding landmark features extracted using MediaPipe.
 
@@ -117,7 +117,7 @@ Execute all cells in the notebook. This will perform the following tasks:
 
 ## 2. Using the Model
 
-Once you have the trained model file (FaceShapeModel_XGBoost.pkl), you can use it in your Flask application to classify face shapes from detected landmarks in real-time or uploaded images.
+Once you have the trained model file (Best_RandomForest.pkl), you can use it in your Flask application to classify face shapes from detected landmarks in real-time or uploaded images.
 
 ## Screenshots
 
