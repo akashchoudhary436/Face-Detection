@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Real-Time Face Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Real-Time Face Shape Detection</h1>
+        <div class="video-container">
+            <img src="{{ url_for('video_feed') }}" alt="Real-time video feed">
+        </div>
+        <a href="/" class="back-link">Go back to Home</a>
+    </div>
+</body>
+</html>

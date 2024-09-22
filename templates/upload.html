@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Upload Image</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+        .box {
+            display: inline-block;
+            text-align: left;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            width: 100%; /* Responsive width */
+            max-width: 500px; /* Reduced maximum width of the box */
+            height: auto; /* Automatic height */
+            overflow: hidden; /* Hide overflowing content */
+            position: relative;
+        }
+        .box form {
+            margin-bottom: 20px;
+        }
+        .box input[type="file"] {
+            margin-bottom: 10px;
+        }
+        .box input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .box input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .file-chosen {
+            font-size: 16px; /* Larger font size */
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            display: block;
+        }
+        .face-shape {
+            font-size: 18px; /* Larger font size */
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 20px;
+            display: block;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .annotated-image-container {
+            text-align: center;
+            margin: 20px auto;
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+        .annotated-image {
+            display: block;
+            max-width: 100%; /* Ensure image doesn't exceed the container width */
+            max-height: 400px; /* Adjust height as needed */
+            margin: 0 auto; /* Center the image */
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            object-fit: contain; /* Fit image to container without distortion */
+        }
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload an Image</h1>
+        <div class="box">
+            <!-- Form for uploading an image -->
+            <form method="post" enctype="multipart/form-data">
+                <input type="file" name="file">
+                <input type="submit" value="Upload">
+            </form>
+            
+            <!-- Display the file chosen -->
+            {% if file %}
+                <span class="file-chosen">File Chosen: {{ file.filename }}</span>
+            {% else %}
+             
+            {% endif %}
+            
+            <!-- Display the face shape if detected -->
+            {% if face_shape %}
+                <span class="face-shape">Face Shape: {{ face_shape }}</span>
+            {% endif %}
+            
+            <!-- Display the error message if any -->
+            {% if error %}
+                <p class="error">Error: {{ error }}</p>
+            {% endif %}
+            
+            <!-- Display the processed (annotated) image if available -->
+            {% if file_url %}
+                <div class="annotated-image-container">
+                    <img class="annotated-image" src="{{ file_url }}" alt="Annotated Image">
+                </div>
+            {% endif %}
+        </div>
+        <a href="/" class="back-link">Go back to Home</a>
+    </div>
+</body>
+</html>
